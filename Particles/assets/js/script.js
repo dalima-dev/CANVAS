@@ -10,36 +10,32 @@ window.addEventListener("resize", () => {
 });
 
 class Ball {
-  constructor() {}
+  constructor(x, y, radius, timeOfBirth, lifeTime) {
+    (this.lifeTime = lifeTime), (this.timeOfBirth = timeOfBirth);
+    (this.radius = radius),
+      (this.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+        Math.random() * 255
+      })`),
+      (this.position = { x, y });
+    this.velocity = {
+      x: Math.random() * 8,
+      y: Math.random() * -8,
+    };
+  }
+  drawBall() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  moveBall() {
+    this.position.x += this.velocity.x;
+    this.position.y += this.velocity.y;
+    wallCollision(this);
+  }
 }
 
-/*
-const ball = {
-  radius: 30,
-  position: {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-  },
-  velocity: {
-    x: 5,
-    y: 5,
-  },
-};
-
-function moveBall(ball) {
-  ball.position.x += ball.velocity.x;
-  ball.position.y += ball.velocity.y;
-  collision(ball);
-}
-
-function drawBall(ball) {
-  ctx.fillStyle = "red";
-  ctx.beginPath();
-  ctx.arc(ball.position.x, ball.position.y, 30, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function collision(ball) {
+function wallCollision(ball) {
   if (
     ball.position.x + ball.radius >= canvas.width ||
     ball.position.x - ball.radius <= 0
@@ -52,12 +48,38 @@ function collision(ball) {
     ball.velocity.y *= -1;
 }
 
+const particles = [];
+window.addEventListener("mousemove", (event) => {
+  for (let i = 0; i < 3; i++)
+    particles.push(
+      new Ball(
+        event.x,
+        event.y,
+        Math.random() * 5 + 0.5,
+        window.performance.now(),
+        3000
+      )
+    );
+});
+
 function run() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  moveBall(ball);
-  drawBall(ball);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  //while (particles.length > 100) particles.shift();
+  for (let index = 0; index < particles.length; index++) {
+    if (
+      window.performance.now() - particles[index].timeOfBirth >=
+      particles[index].lifeTime
+    )
+      particles.splice(index, 1);
+  }
+  particles.forEach((ball) => {
+    ball.moveBall();
+  });
+  particles.forEach((ball) => {
+    ball.drawBall();
+  });
   requestAnimationFrame(run);
 }
 
 run();
-*/
