@@ -11,8 +11,9 @@ window.addEventListener("resize", () => {
 
 class Ball {
   constructor(x, y, radius, timeOfBirth, lifeTime) {
-    (this.lifeTime = lifeTime), (this.timeOfBirth = timeOfBirth);
-    (this.radius = radius),
+    (this.lifeTime = lifeTime),
+      (this.timeOfBirth = timeOfBirth),
+      (this.radius = radius),
       (this.color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
         Math.random() * 255
       })`),
@@ -29,9 +30,18 @@ class Ball {
     ctx.fill();
   }
   moveBall() {
+    this.velocity.y += this.gravity;
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
     wallCollision(this);
+    if (this.position.y + this.radius >= canvas.height)
+      this.velocity.y += this.friction;
+  }
+  get gravity() {
+    return 1;
+  }
+  get friction() {
+    return 5;
   }
 }
 
@@ -39,25 +49,33 @@ function wallCollision(ball) {
   if (
     ball.position.x + ball.radius >= canvas.width ||
     ball.position.x - ball.radius <= 0
-  )
+  ) {
+    if (ball.position.x + ball.radius >= canvas.width)
+      ball.position.x = canvas.width - ball.radius;
+    if (ball.position.x - ball.radius <= 0) ball.position.x = ball.radius;
     ball.velocity.x *= -1;
+  }
   if (
     ball.position.y + ball.radius >= canvas.height ||
     ball.position.y - ball.radius <= 0
-  )
+  ) {
+    if (ball.position.y + ball.radius >= canvas.height)
+      ball.position.y = canvas.height - ball.radius;
+    if (ball.position.y - ball.radius <= 0) ball.position.y = ball.radius;
     ball.velocity.y *= -1;
+  }
 }
 
 const particles = [];
-window.addEventListener("mousemove", (event) => {
+window.addEventListener("click", (event) => {
   for (let i = 0; i < 3; i++)
     particles.push(
       new Ball(
         event.x,
         event.y,
-        Math.random() * 5 + 0.5,
+        Math.random() * 50 + 10,
         window.performance.now(),
-        3000
+        5000
       )
     );
 });
