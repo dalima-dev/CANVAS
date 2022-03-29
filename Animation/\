@@ -10,7 +10,6 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   ctx.scale(5, 5);
-  ctx.imageSmoothingEnabled = false;
 });
 
 const image = new Image();
@@ -19,7 +18,7 @@ image.src = "mario.png";
 class Mario {
   constructor(x, y) {
     this.position = { x, y };
-    this.velocity = { x: 0.8, y: 0 };
+    this.velocity = { x: 0.5, y: 0 };
     this.countLoop = 0;
     this.frame = 0;
   }
@@ -45,7 +44,7 @@ class Mario {
   move() {
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
-    if (this.position.x >= canvas.width - 650) this.position.x = -16;
+    if (this.position.x >= canvas.width) this.position.x = -200;
   }
 }
 
