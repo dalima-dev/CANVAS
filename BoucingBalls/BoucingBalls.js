@@ -80,9 +80,18 @@ window.addEventListener("click", (event) => {
     );
 });
 
+function drawText() {
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.fillText("Clique em qualquer lugar da tela!", canvas.width/2, canvas.height/2);
+    ctx.fillText("Click anywhere on screen!", canvas.width/2, canvas.height/2 + 30);
+}
+
 function run() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawText();
   //while (particles.length > 100) particles.shift();
   for (let index = 0; index < particles.length; index++) {
     if (
